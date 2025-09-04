@@ -29,10 +29,9 @@ const ZoomModal: React.FC<ZoomModalProps> = ({ isOpen, onClose, imageSrc, imageS
         </button>
         <div className="relative aspect-[3/2] bg-stone-400 w-full">
             {imageSrc2 ? (
-                <div className="w-full h-full flex gap-1 p-1">
-                    <img src={imageSrc} alt="Zoomed view 1" className="flex-1 h-full object-cover bg-stone-400 min-w-0" />
-                    <div className="w-px self-stretch bg-stone-500"></div>
-                    <img src={imageSrc2} alt="Zoomed view 2" className="flex-1 h-full object-cover bg-stone-400 min-w-0" />
+                <div className="w-full h-full grid grid-cols-2 gap-2 p-1">
+                    <img src={imageSrc} alt="Zoomed view 1" className="w-full h-full object-cover bg-stone-400" />
+                    <img src={imageSrc2} alt="Zoomed view 2" className="w-full h-full object-cover bg-stone-400" />
                 </div>
             ) : (
                 <img src={imageSrc} alt="Zoomed view" className="w-full h-full object-cover" />

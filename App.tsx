@@ -139,6 +139,20 @@ const App: React.FC = () => {
     setIsZoomModalOpen(true);
   };
 
+  const handleDownload = useCallback(() => {
+    if (!transformedImage) return;
+
+    const randomNumber = Math.floor(Math.random() * 1_000_000_000).toString().padStart(9, '0');
+    const filename = `haeragn4a_1986_${randomNumber}.png`;
+
+    const link = document.createElement('a');
+    link.href = transformedImage;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }, [transformedImage]);
+
   const handleTransform = async () => {
     if (!originalImage1 || !originalMimeType1) {
       setError("Please select image 1 to begin.");
@@ -223,6 +237,7 @@ const App: React.FC = () => {
                 loadingMessage={loadingMessage}
                 onZoom={() => handleZoom(transformedImage, null)}
                 className="noise-card"
+                onDownload={handleDownload}
             />
         </div>
       </main>

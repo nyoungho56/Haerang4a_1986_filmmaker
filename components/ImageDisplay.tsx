@@ -7,6 +7,7 @@ interface ImageDisplayProps {
   isLoading?: boolean;
   loadingMessage?: string;
   onZoom: () => void;
+  onDownload?: () => void;
   className?: string;
 }
 
@@ -25,7 +26,7 @@ const EmptyState: React.FC = () => (
     </div>
 );
 
-const ImageDisplay: React.FC<ImageDisplayProps> = ({ title, imageSrc, imageSrc2, isLoading = false, loadingMessage = 'Processing...', onZoom, className }) => {
+const ImageDisplay: React.FC<ImageDisplayProps> = ({ title, imageSrc, imageSrc2, isLoading = false, loadingMessage = 'Processing...', onZoom, onDownload, className }) => {
   const canZoom = imageSrc && !isLoading;
   return (
     <div className={`w-full p-3 bg-stone-300 border-4 border-stone-800 shadow-inner flex flex-col ${className || ''}`}>
@@ -37,16 +38,29 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({ title, imageSrc, imageSrc2,
         {isLoading && <LoadingOverlay message={loadingMessage} />}
         {imageSrc ? (
             imageSrc2 ? (
-                <div className="w-full h-full flex gap-1 p-1">
-                    <img src={imageSrc} alt={`${title} 1`} className="flex-1 h-full object-cover bg-stone-400 min-w-0" />
-                    <div className="w-px self-stretch bg-stone-500"></div>
-                    <img src={imageSrc2} alt={`${title} 2`} className="flex-1 h-full object-cover bg-stone-400 min-w-0" />
+                <div className="w-full h-full grid grid-cols-2 gap-2 p-1">
+                    <img src={imageSrc} alt={`${title} 1`} className="w-full h-full object-cover bg-stone-400" />
+                    <img src={imageSrc2} alt={`${title} 2`} className="w-full h-full object-cover bg-stone-400" />
                 </div>
             ) : (
                 <img src={imageSrc} alt={title} className="w-full h-full object-cover" />
             )
         ) : (
             !isLoading && <EmptyState />
+        )}
+        {imageSrc && onDownload && !isLoading && (
+            <button
+                onClick={(e) => {
+                    e.stopPropagation();
+                    onDownload();
+                }}
+                className="absolute bottom-2 right-2 p-2 bg-stone-900/50 rounded-full hover:bg-stone-900/80 transition-colors z-20"
+                aria-label="Download image"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-amber-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+            </button>
         )}
       </div>
     </div>
