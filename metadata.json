@@ -1,5 +1,5 @@
 {
-  "name": "1980s Retro Image Converter",
-  "description": "An application that transforms your photos into 1980s-style film camera images using the Gemini API. It adds a retro filter and a vintage date stamp.",
+  "name": "1986 Retro-matic",
+  "description": "Travel back to the 80s! Transform your photos into authentic, retro-style film camera images with the 1986 Retro-matic, powered by Gemini.",
   "requestFramePermissions": []
 }

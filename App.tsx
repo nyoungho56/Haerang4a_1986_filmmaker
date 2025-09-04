@@ -241,8 +241,16 @@ const App: React.FC = () => {
             />
         </div>
       </main>
-      <footer className="w-full bg-stone-800 text-amber-400 p-2 text-center text-sm border-t-2 border-amber-500">
-        <p>A Faded Memory Generator // Powered by Google Gemini</p>
+      <footer className="w-full bg-stone-800 text-amber-400 p-4 text-center border-t-2 border-amber-500 flex flex-col md:flex-row items-center justify-center gap-4">
+        <p className="text-lg">Made by Nyoungho Kim(Haerang4a)</p>
+        <a 
+            href="https://www.threads.com/@haerang4a_archive" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-xl px-6 py-2 border-2 border-amber-500 text-stone-900 bg-amber-500 hover:bg-amber-400 transition-colors tracking-wider shadow-md hover:shadow-lg"
+        >
+            VISIT THREADS
+        </a>
       </footer>
       <PromptModal 
         isOpen={isPromptModalOpen}
