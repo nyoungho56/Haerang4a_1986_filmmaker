@@ -1,0 +1,5 @@
+{
+  "name": "1980s Retro Image Converter",
+  "description": "An application that transforms your photos into 1980s-style film camera images using the Gemini API. It adds a retro filter and a vintage date stamp.",
+  "requestFramePermissions": []
+}
