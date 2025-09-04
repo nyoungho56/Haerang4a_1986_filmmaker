@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import * as React from 'react';
 
 interface PromptModalProps {
   isOpen: boolean;
@@ -7,9 +7,9 @@ interface PromptModalProps {
 }
 
 const PromptModal: React.FC<PromptModalProps> = ({ isOpen, onClose, onSubmit }) => {
-  const [prompt, setPrompt] = useState('');
+  const [prompt, setPrompt] = React.useState('');
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!isOpen) {
       setPrompt(''); 
     }

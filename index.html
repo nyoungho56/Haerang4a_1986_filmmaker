@@ -43,6 +43,19 @@
         pointer-events: none;
         z-index: 1;
       }
+      .retro-texture-button {
+          position: relative;
+          z-index: 1;
+      }
+      .retro-texture-button::before {
+          content: "";
+          position: absolute;
+          top: 0; left: 0; right: 0; bottom: 0;
+          background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEWFhYWDg4N3d3dtbW17e3t1dXVpaWl9fX18fHyAgICBgYGJiYmMjIyKioqDg4WGhoZ4eHiNjY2bm5uUlJSWlpaZmZnLy8vHx8fExMTFxcWnp6ejo6M5ZQA4AAAAVklEQVR42t3QWRQAIQwAwWf8c/3/3xZgTCVpDAvwgOQpAABEIiLseP4fRTi/B7brwQoKQe9L8lDrNtxK+aT4Q9j/VfJ1UCs3Wn8L/uAZgABgQp0s2z5KgxMAAAAAElFTkSuQmCC');
+          opacity: 0.1;
+          pointer-events: none;
+          z-index: -1;
+      }
     </style>
 <script type="importmap">
 {

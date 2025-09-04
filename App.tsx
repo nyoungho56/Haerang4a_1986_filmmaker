@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import * as React from 'react';
 import Header from './components/Header';
 import ImageDisplay from './components/ImageDisplay';
 import Uploader from './components/Uploader';
@@ -8,26 +8,26 @@ import { transformImageTo1980s } from './services/geminiService';
 import type { TransformedImageResponse } from './types';
 
 const App: React.FC = () => {
-  const [originalImage1, setOriginalImage1] = useState<string | null>(null);
-  const [originalMimeType1, setOriginalMimeType1] = useState<string | null>(null);
-  const [originalImage2, setOriginalImage2] = useState<string | null>(null);
-  const [originalMimeType2, setOriginalMimeType2] = useState<string | null>(null);
-  const [transformedImage, setTransformedImage] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-  const [loadingMessage, setLoadingMessage] = useState<string>('Initializing...');
+  const [originalImage1, setOriginalImage1] = React.useState<string | null>(null);
+  const [originalMimeType1, setOriginalMimeType1] = React.useState<string | null>(null);
+  const [originalImage2, setOriginalImage2] = React.useState<string | null>(null);
+  const [originalMimeType2, setOriginalMimeType2] = React.useState<string | null>(null);
+  const [transformedImage, setTransformedImage] = React.useState<string | null>(null);
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<string | null>(null);
+  const [loadingMessage, setLoadingMessage] = React.useState<string>('Initializing...');
   
-  const [isPromptModalOpen, setIsPromptModalOpen] = useState<boolean>(false);
-  const [customPrompt, setCustomPrompt] = useState<string>('');
-  const [isZoomModalOpen, setIsZoomModalOpen] = useState<boolean>(false);
-  const [zoomedImageSrc, setZoomedImageSrc] = useState<string | null>(null);
-  const [zoomedImageSrc2, setZoomedImageSrc2] = useState<string | null>(null);
+  const [isPromptModalOpen, setIsPromptModalOpen] = React.useState<boolean>(false);
+  const [customPrompt, setCustomPrompt] = React.useState<string>('');
+  const [isZoomModalOpen, setIsZoomModalOpen] = React.useState<boolean>(false);
+  const [zoomedImageSrc, setZoomedImageSrc] = React.useState<string | null>(null);
+  const [zoomedImageSrc2, setZoomedImageSrc2] = React.useState<string | null>(null);
   
-  const [isMuted, setIsMuted] = useState(true);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [isMuted, setIsMuted] = React.useState(true);
+  const audioRef = React.useRef<HTMLAudioElement | null>(null);
 
-  const fileInputRef1 = useRef<HTMLInputElement>(null);
-  const fileInputRef2 = useRef<HTMLInputElement>(null);
+  const fileInputRef1 = React.useRef<HTMLInputElement>(null);
+  const fileInputRef2 = React.useRef<HTMLInputElement>(null);
 
   const loadingMessages = [
     'Accessing flux capacitor...',
@@ -39,7 +39,7 @@ const App: React.FC = () => {
     'Engaging Nano-Banana AI...',
   ];
 
-  useEffect(() => {
+  React.useEffect(() => {
     audioRef.current = document.getElementById('background-music') as HTMLAudioElement;
     if (audioRef.current) {
         audioRef.current.volume = 0.3;
@@ -65,8 +65,9 @@ const App: React.FC = () => {
     };
   }, []);
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
+  React.useEffect(() => {
+    // FIX: Changed NodeJS.Timeout to ReturnType<typeof setInterval> for browser compatibility.
+    let interval: ReturnType<typeof setInterval>;
     if (isLoading) {
       setLoadingMessage(loadingMessages[0]);
       let i = 1;
@@ -86,7 +87,7 @@ const App: React.FC = () => {
       setIsMuted(newMutedState);
   };
   
-  const fileReaderHandler = useCallback((file: File, setImage: React.Dispatch<React.SetStateAction<string | null>>, setMime: React.Dispatch<React.SetStateAction<string | null>>) => {
+  const fileReaderHandler = React.useCallback((file: File, setImage: React.Dispatch<React.SetStateAction<string | null>>, setMime: React.Dispatch<React.SetStateAction<string | null>>) => {
     if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
         setError("Invalid file type. Please select a JPG, PNG, or WEBP image.");
         return;
@@ -107,6 +108,9 @@ const App: React.FC = () => {
     if (event.target.files && event.target.files[0]) {
       setError(null);
       setTransformedImage(null);
+      setOriginalImage2(null);
+      setOriginalMimeType2(null);
+      setCustomPrompt('');
       fileReaderHandler(event.target.files[0], setOriginalImage1, setOriginalMimeType1);
     }
   };
@@ -139,7 +143,7 @@ const App: React.FC = () => {
     setIsZoomModalOpen(true);
   };
 
-  const handleDownload = useCallback(() => {
+  const handleDownload = React.useCallback(() => {
     if (!transformedImage) return;
 
     const randomNumber = Math.floor(Math.random() * 1_000_000_000).toString().padStart(9, '0');
@@ -191,7 +195,7 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen text-stone-900 flex flex-col items-center bg-stone-800" style={{ fontFamily: "'VT323', monospace" }}>
       <Header isMuted={isMuted} onToggleMute={handleToggleMute} />
-      <main className="w-full max-w-7xl flex-grow container mx-auto p-4 md:p-8 flex flex-col lg:flex-row gap-8">
+      <main className="w-full max-w-7xl flex-grow container mx-auto p-4 md:p-8 flex flex-col gap-8">
         
         <input
             type="file"
@@ -208,35 +212,37 @@ const App: React.FC = () => {
             accept="image/png, image/jpeg, image/webp"
         />
 
-        <div className="lg:w-1/3 w-full flex flex-col">
-            <Uploader 
-                onSelect1Click={handleSelect1Click}
-                onSelect2Click={handleSelect2Click}
-                onTransform={handleTransform}
-                isImage1Selected={!!originalImage1}
-                isProcessing={isLoading}
-            />
-             {error && (
-                <div className="mt-4 p-4 bg-red-800 text-yellow-200 border-2 border-red-900 text-center">
-                    <p className="font-bold text-lg">SYSTEM ERROR:</p>
-                    <p>{error}</p>
-                </div>
-            )}
-        </div>
-        <div className="lg:w-2/3 w-full grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="w-full flex flex-col items-center gap-8">
             <ImageDisplay 
                 title="[ ORIGINAL(S) ]" 
                 imageSrc={originalImage1} 
                 imageSrc2={originalImage2}
                 onZoom={() => handleZoom(originalImage1, originalImage2)}
+                className="w-full max-w-2xl"
             />
+            <div className="w-full max-w-2xl flex flex-col">
+                <Uploader 
+                    onSelect1Click={handleSelect1Click}
+                    onSelect2Click={handleSelect2Click}
+                    onTransform={handleTransform}
+                    isImage1Selected={!!originalImage1}
+                    isProcessing={isLoading}
+                    customPrompt={customPrompt}
+                />
+                 {error && (
+                    <div className="mt-4 p-4 bg-red-800 text-yellow-200 border-2 border-red-900 text-center">
+                        <p className="font-bold text-lg">SYSTEM ERROR:</p>
+                        <p>{error}</p>
+                    </div>
+                )}
+            </div>
             <ImageDisplay 
                 title="[ 1986 VERSION ]" 
                 imageSrc={transformedImage}
                 isLoading={isLoading}
                 loadingMessage={loadingMessage}
                 onZoom={() => handleZoom(transformedImage, null)}
-                className="noise-card"
+                className="noise-card w-full max-w-2xl"
                 onDownload={handleDownload}
             />
         </div>
@@ -247,7 +253,7 @@ const App: React.FC = () => {
             href="https://www.threads.com/@haerang4a_archive" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="text-xl px-6 py-2 border-2 border-amber-500 text-stone-900 bg-amber-500 hover:bg-amber-400 transition-colors tracking-wider shadow-md hover:shadow-lg"
+            className="retro-texture-button text-xl px-6 py-2 border-2 border-amber-500 text-stone-900 bg-amber-500 hover:bg-amber-400 transition-colors tracking-wider shadow-md hover:shadow-lg"
         >
             VISIT THREADS
         </a>

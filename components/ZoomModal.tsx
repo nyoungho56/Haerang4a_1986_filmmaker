@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 
 interface ZoomModalProps {
   isOpen: boolean;
@@ -12,11 +12,11 @@ const ZoomModal: React.FC<ZoomModalProps> = ({ isOpen, onClose, imageSrc, imageS
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4 animate-fadeIn"
+      className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4 animate-fadeIn overflow-y-auto"
       onClick={onClose}
     >
       <div
-        className="relative bg-stone-300 p-6 border-8 border-stone-800 shadow-2xl max-w-4xl w-full"
+        className="relative bg-stone-300 p-6 border-8 border-stone-800 shadow-2xl max-w-4xl w-full my-auto"
         onClick={(e) => e.stopPropagation()}
         style={{ boxShadow: '0 0 0 10px #292524, 0 0 50px rgba(0,0,0,0.7)' }}
       >
@@ -27,14 +27,14 @@ const ZoomModal: React.FC<ZoomModalProps> = ({ isOpen, onClose, imageSrc, imageS
         >
           &times;
         </button>
-        <div className="relative aspect-[3/2] bg-stone-400 w-full">
+        <div className="relative bg-stone-400 w-full">
             {imageSrc2 ? (
-                <div className="w-full h-full grid grid-cols-2 gap-2 p-1">
-                    <img src={imageSrc} alt="Zoomed view 1" className="w-full h-full object-cover bg-stone-400" />
-                    <img src={imageSrc2} alt="Zoomed view 2" className="w-full h-full object-cover bg-stone-400" />
+                <div className="flex flex-row gap-2 items-start">
+                    <img src={imageSrc} alt="Zoomed view 1" className="w-1/2 h-auto" />
+                    <img src={imageSrc2} alt="Zoomed view 2" className="w-1/2 h-auto" />
                 </div>
             ) : (
-                <img src={imageSrc} alt="Zoomed view" className="w-full h-full object-cover" />
+                <img src={imageSrc} alt="Zoomed view" className="w-full h-auto" />
             )}
         </div>
         <div className="absolute -bottom-4 -right-4 w-24 h-6 bg-stone-800 transform rotate-[-4deg]"></div>

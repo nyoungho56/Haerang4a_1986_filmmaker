@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 
 interface ImageDisplayProps {
   title: string;
@@ -27,20 +27,27 @@ const EmptyState: React.FC = () => (
 );
 
 const ImageDisplay: React.FC<ImageDisplayProps> = ({ title, imageSrc, imageSrc2, isLoading = false, loadingMessage = 'Processing...', onZoom, onDownload, className }) => {
-  const canZoom = imageSrc && !isLoading;
+  const canZoom = (imageSrc || imageSrc2) && !isLoading;
+  const hasTwoImages = !!imageSrc && !!imageSrc2;
+  const hasFixedAspectRatio = !hasTwoImages;
+
   return (
-    <div className={`w-full p-3 bg-stone-300 border-4 border-stone-800 shadow-inner flex flex-col ${className || ''}`}>
+    <div className={`w-full p-3 bg-stone-300 border-4 border-stone-800 shadow-inner flex flex-col min-w-0 overflow-hidden ${className || ''}`}>
       <h2 className="text-2xl text-stone-800 text-center pb-2 border-b-2 border-stone-500 mb-3">{title}</h2>
       <div 
-        className={`relative aspect-[3/2] bg-stone-400 flex-grow ${canZoom ? 'cursor-pointer' : ''}`}
+        className={`relative bg-stone-400 ${canZoom ? 'cursor-pointer' : ''} ${hasFixedAspectRatio ? 'aspect-[4/5]' : ''}`}
         onClick={canZoom ? onZoom : undefined}
       >
         {isLoading && <LoadingOverlay message={loadingMessage} />}
         {imageSrc ? (
             imageSrc2 ? (
-                <div className="w-full h-full grid grid-cols-2 gap-2 p-1">
-                    <img src={imageSrc} alt={`${title} 1`} className="w-full h-full object-cover bg-stone-400" />
-                    <img src={imageSrc2} alt={`${title} 2`} className="w-full h-full object-cover bg-stone-400" />
+                <div className="flex flex-row gap-2 p-2">
+                    <div className="w-1/2 aspect-[4/5] bg-stone-500 overflow-hidden">
+                        <img src={imageSrc} alt={`${title} 1`} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="w-1/2 aspect-[4/5] bg-stone-500 overflow-hidden">
+                        <img src={imageSrc2} alt={`${title} 2`} className="w-full h-full object-cover" />
+                    </div>
                 </div>
             ) : (
                 <img src={imageSrc} alt={title} className="w-full h-full object-cover" />
@@ -48,19 +55,19 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({ title, imageSrc, imageSrc2,
         ) : (
             !isLoading && <EmptyState />
         )}
-        {imageSrc && onDownload && !isLoading && (
-            <button
-                onClick={(e) => {
-                    e.stopPropagation();
-                    onDownload();
-                }}
-                className="absolute bottom-2 right-2 p-2 bg-stone-900/50 rounded-full hover:bg-stone-900/80 transition-colors z-20"
-                aria-label="Download image"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-amber-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                </svg>
-            </button>
+        {onDownload && imageSrc && !isLoading && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation(); // prevent zoom
+              onDownload();
+            }}
+            className="absolute bottom-2 right-2 bg-green-600 text-white p-2 rounded-full shadow-lg hover:bg-green-500 transition-colors z-20"
+            aria-label="Download image"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+          </button>
         )}
       </div>
     </div>
